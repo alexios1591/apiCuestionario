@@ -7,8 +7,9 @@ use App\Models\Cliente;
 use App\Models\UsuarioRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\returnSelf;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Exports\ClientExcelExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ClienteController extends Controller
 {
@@ -129,6 +130,36 @@ class ClienteController extends Controller
             return response()->json(['message' => 'Ocurrió un error al generar el PDF', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function exportExcel()
+    {
+        try {
+            $clientes = Cliente::all()->transform(function ($cliente, $index) {
+                return [
+                    'index' => $index + 1,
+                    'CodClie' => $cliente->CodClie,
+                    'NomClie' => $cliente->NomClie,
+                    'AppClie' => $cliente->AppClie,
+                    'ApmClie' => $cliente->ApmClie,
+                    'EmaClie' => $cliente->EmaClie,
+                    'DniClie' => $cliente->DniClie,
+                    'FnaClie' => $cliente->FnaClie,
+                    'CelClie' => $cliente->CelClie,
+                    'localidad' => $cliente->localidad,
+                    'RegClie' => $cliente->RegClie,
+                    'encuestado' => $cliente->preguntas->isNotEmpty()
+                ];
+            });
+
+            return Excel::download(new ClientExcelExport($clientes), 'Reporte de clientes - ' . now()->format('d-m-Y') . '.xlsx');
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al generar el Excel',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
     /**
      * Display the specified resource.
