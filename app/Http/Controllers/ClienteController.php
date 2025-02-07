@@ -15,9 +15,12 @@ class ClienteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function getAll($id)
+    public function getAll($id, Request $request)
     {
         try {
+
+            $dni = $request->query('dni');
+
             $isAdmin = UsuarioRoles::where('CodUsu', $id)
                 ->where('CodRol', 1)
                 ->exists();
@@ -28,6 +31,10 @@ class ClienteController extends Controller
 
             if (!$isAdmin) {
                 $clientesQuery->where('preguntas.CodUsu', $id);
+            }
+
+            if ($dni) {
+                $clientesQuery->where('clientes.DniClie', 'like', "%$dni%");
             }
 
             $clientes = $clientesQuery->paginate(10);
