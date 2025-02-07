@@ -151,7 +151,10 @@ class ClienteController extends Controller
                 ];
             });
 
-            return Excel::download(new ClientExcelExport($clientes), 'Reporte de clientes - ' . now()->format('d-m-Y') . '.xlsx');
+            return Excel::download(
+                new ClientExcelExport($clientes),
+                'Reporte de clientes - ' . now()->format('d-m-Y H:i:s') . '.xlsx'
+            );
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al generar el Excel',
