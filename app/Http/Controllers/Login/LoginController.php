@@ -20,7 +20,19 @@ class LoginController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Inicio de sesión exitoso',
-                'user' => $usuario,
+                'user' => [
+                    'CodUsu' => $usuario->CodUsu,
+                    'NomUsu' => $usuario->NomUsu,
+                    'AppUsu' => $usuario->AppUsu,
+                    'ApmUsu' => $usuario->ApmUsu,
+                    'DocUsu' => $usuario->DocUsu,
+                    'EmaUsu' => $usuario->EmaUsu,
+                    'CelUsu' => $usuario->CelUsu,
+                    'sexUsu' => $usuario->sexUsu,
+                    'FnaUsu' => $usuario->FnaUsu,
+                    'RegUsu' => $usuario->RegUsu,
+                    'rol' => $usuario->roles->first()->NomRol
+                ],
             ], 200);
         }
     

@@ -81,18 +81,17 @@ class ClientExcelExport implements FromCollection, WithHeadings, WithMapping,
     public function styles(Worksheet $sheet)
     {
         return [
-            // Title row
             1 => [
                 'font' => ['bold' => true, 'size' => 16, 'color' => ['rgb' => 'FFFFFF']],
                 'fill' => ['fillType' => 'solid', 'color' => ['rgb' => '2C3E50']],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ],
-            // Subtitle row
+
             2 => [
                 'font' => ['italic' => true, 'color' => ['rgb' => '7F8C8D']],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER]
             ],
-            // Header row
+
             4 => [
                 'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
                 'fill' => ['fillType' => 'solid', 'color' => ['rgb' => '34495E']],
@@ -117,7 +116,6 @@ class ClientExcelExport implements FromCollection, WithHeadings, WithMapping,
                     ]
                 ]);
 
-                // Right-align Celular column (8th column, index 7)
                 $event->sheet->getStyle('I5:I'.(count($this->clientes) + 5))
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_RIGHT);
