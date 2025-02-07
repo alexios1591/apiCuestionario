@@ -25,4 +25,10 @@ class Cliente extends Model
     ];
     public $timestamps = false;
     protected $primaryKey = 'CodClie';
+
+    public function preguntas()
+    {
+        return $this->hasMany(Cuestionario::class, 'CodClie', 'CodClie');
+    }
+
 }
