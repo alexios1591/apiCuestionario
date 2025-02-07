@@ -30,4 +30,9 @@ class Usuario extends Authenticatable
     protected $casts = [
         'PassUsu' => 'hashed',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Roles::class, 'usuarios_rol', 'CodUsu', 'CodRol');
+    }
 }
