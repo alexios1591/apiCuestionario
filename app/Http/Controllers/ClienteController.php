@@ -102,6 +102,33 @@ class ClienteController extends Controller
         }
     }
 
+    public function exportPdf()
+    {
+        try {
+            $clientes = Cliente::all();
+
+            $clientes = $clientes->transform(function ($cliente) {
+                return [
+                    'CodClie' => $cliente->CodClie,
+                    'NomClie' => $cliente->NomClie,
+                    'AppClie' => $cliente->AppClie,
+                    'ApmClie' => $cliente->ApmClie,
+                    'EmaClie' => $cliente->EmaClie,
+                    'DniClie' => $cliente->DniClie,
+                    'FnaClie' => $cliente->FnaClie,
+                    'CelClie' => $cliente->CelClie,
+                    'localidad' => $cliente->localidad,
+                    'RegClie' => $cliente->RegClie,
+                    'encuestado' => $cliente->preguntas->isNotEmpty()
+                ];
+            });
+
+            $pdf = PDF::loadView('reports.clients-report', ['clientes' => $clientes]);
+            return $pdf->download('Reporte de clientes - ' . now()->format('d-m-Y H:i:s') . '.pdf');
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Ocurrió un error al generar el PDF', 'error' => $e->getMessage()], 500);
+        }
+    }
 
     /**
      * Display the specified resource.
