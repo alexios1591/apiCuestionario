@@ -19,24 +19,21 @@ class ClienteController extends Controller
     {
         try {
             $isAdmin = UsuarioRoles::where('CodUsu', $id)
-                                   ->where('CodRol', 1)
-                                   ->exists(); 
-    
-            if ($isAdmin) {
-                $clientes = DB::table('preguntas')
-                              ->join('clientes', 'preguntas.CodClie', '=', 'clientes.CodClie')
-                              ->select('clientes.*')
-                              ->get();
-            } else {
-                $clientes = DB::table('preguntas')
-                              ->join('clientes', 'preguntas.CodClie', '=', 'clientes.CodClie')
-                              ->where('preguntas.CodUsu', $id)
-                              ->select('clientes.*')
-                              ->get();
+                ->where('CodRol', 1)
+                ->exists();
+
+            $clientesQuery = DB::table('preguntas')
+                ->join('clientes', 'preguntas.CodClie', '=', 'clientes.CodClie')
+                ->select('clientes.*');
+
+            if (!$isAdmin) {
+                $clientesQuery->where('preguntas.CodUsu', $id);
             }
-    
+
+            $clientes = $clientesQuery->paginate(10);
+
             return response()->json($clientes);
-    
+
         } catch (\Exception $e) {
             return response()->json(['message' => 'Ocurrió un error', 'error' => $e->getMessage()], 500);
         }
@@ -44,22 +41,22 @@ class ClienteController extends Controller
 
     public function getClientes()
     {
-        try{
+        try {
             $clientes = Cliente::all();
             return response()->json($clientes);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => "Error interno"]);
         }
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreRequest $request)
     {
-        try{
+        try {
             $validated = $request->validated();
             $validated['RegClie'] = now();
 
@@ -67,36 +64,36 @@ class ClienteController extends Controller
 
             return response()->json(["message" => "Cliente registrado", "cliente" => collect([$cliente])]);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(["message" => $e]);
         }
     }
 
     public function searchByDni($dni)
-{
-    try {
-        $clientes = Cliente::where('DniClie', $dni)->get();
+    {
+        try {
+            $clientes = Cliente::where('DniClie', $dni)->get();
 
-        if ($clientes->isEmpty()) {
+            if ($clientes->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontraron clientes con el DNI proporcionado.'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Clientes encontrados.',
+                'clientes' => $clientes
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'No se encontraron clientes con el DNI proporcionado.'
-            ], 404);
+                'message' => 'Ocurrió un error al buscar el cliente.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Clientes encontrados.',
-            'clientes' => $clientes
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Ocurrió un error al buscar el cliente.',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
 
 
     /**
