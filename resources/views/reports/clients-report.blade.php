@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Clientes</title>
+    <title>Reporte de Clientes - {{ date('d/m/Y H:i:s') }}</title>
     <style>
         @page {
             margin: 1cm;
