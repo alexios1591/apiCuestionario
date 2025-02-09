@@ -37,7 +37,7 @@ class StoreRequest extends FormRequest
         return [
             'EmaClie.unique' => 'El correo electrónico ya está registrado.',
             'DniClie.unique' => 'El DNI ya ha sido registrado.',
-            'CelClie.unique' => 'El número de teléfono ya está registrado.',
+            'CelClie.unique' => 'El número ya está registrado.',
         ];
     }
 }
