@@ -25,7 +25,7 @@ class ClienteFactory extends Factory
             'FnaClie' => $this->faker->date('Y-m-d', '2003-12-31'),
             'CelClie' => $this->faker->phoneNumber,
             'localidad' => $this->faker->state,
-            'RegClie' => $this->faker->dateTime
+            'RegClie' => $this->faker->dateTimeBetween('first day of January this year', 'now')
         ];
     }
 }
