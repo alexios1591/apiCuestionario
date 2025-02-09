@@ -47,6 +47,28 @@ class ClienteController extends Controller
         }
     }
 
+    public function getUnsurveyed(Request $request)
+    {
+        try {
+
+            $dni = $request->query('dni');
+
+            $clientesQuery = Cliente::whereDoesntHave('preguntas')
+            ->orderBy('RegClie', 'desc');
+
+            if ($dni) {
+                $clientesQuery->where('clientes.DniClie', 'like', "%$dni%");
+            }
+
+            $clientes = $clientesQuery->paginate(10);
+
+            return response()->json($clientes);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Ocurrió un error', 'error' => $e->getMessage()], 500);
+        }
+    }
+
     public function getClientes()
     {
         try {
