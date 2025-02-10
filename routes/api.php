@@ -27,6 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('dashboard', [DashboardController::class, 'getDashboardStats']);
+Route::get('dashboard/surveys-by-period', [DashboardController::class, 'getSurveysByPeriod']);
 
 Route::post('cliente', [ClienteController::class, 'store']);
 Route::put('cliente', [ClienteController::class, 'update']);
