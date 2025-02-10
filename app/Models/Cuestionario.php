@@ -50,6 +50,9 @@ class Cuestionario extends Model
                 $model->Pre9 + 
                 $model->Pre10 + 
                 $model->Pre11;
+
+            $model->FecPre = now()->toDateString();
+            $model->HorPre = now()->toTimeString();
         });
     }
 
