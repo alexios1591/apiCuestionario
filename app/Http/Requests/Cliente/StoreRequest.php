@@ -25,10 +25,10 @@ class StoreRequest extends FormRequest
             'NomClie' => ['required'],
             'AppClie' => ['required'],
             'ApmClie' => ['required'],
-            'EmaClie' => ['required', 'unique:clientes,EmaClie'],
-            'DniClie' => ['required', 'unique:clientes,DniClie'],
+            'EmaClie' => ['required', 'unique:clientes,EmaClie,' . $this->CodClie . ',CodClie'],
+            'DniClie' => ['required', 'unique:clientes,DniClie,' . $this->CodClie . ',CodClie'],
             'FnaClie' => ['required'],
-            'CelClie' => ['required', 'unique:clientes,CelClie'],
+            'CelClie' => ['required', 'unique:clientes,CelClie,' . $this->CodClie . ',CodClie'],
             'localidad' => ['required']
         ];
     }
