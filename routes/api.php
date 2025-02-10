@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\Cuestionario\CuestionarioController;
 use App\Http\Controllers\Cuestionario\LocalidadController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Usuario\RolesController;
 use App\Http\Controllers\Usuario\UsuarioController;
@@ -24,6 +25,8 @@ use PharIo\Manifest\AuthorCollection;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('dashboard', [DashboardController::class, 'getDashboardStats']);
 
 Route::post('cliente', [ClienteController::class, 'store']);
 Route::put('cliente', [ClienteController::class, 'update']);
