@@ -106,4 +106,36 @@ class DashboardController extends Controller
         }
     }
 
+    public function getSurveysByUser()
+    {
+        try {
+            $surveysByUser = Cuestionario::select([
+                'CodUsu',
+                DB::raw('COUNT(*) as count')
+            ])
+                ->groupBy('CodUsu')
+                ->with('usuario:CodUsu,NomUsu') // Assuming there is a relationship defined in the Cuestionario model
+                ->get();
+
+            $labels = [];
+            $data = [];
+
+            foreach ($surveysByUser as $item) {
+                $labels[] = $item->usuario->NomUsu;
+                $data[] = $item->count;
+            }
+
+            return response()->json([
+                'labels' => $labels,
+                'data' => $data,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error processing request',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

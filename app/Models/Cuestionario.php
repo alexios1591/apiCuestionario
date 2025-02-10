@@ -53,4 +53,14 @@ class Cuestionario extends Model
         });
     }
 
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'CodClie', 'CodClie');
+    }
+
+    public function usuario()
+    {
+        return $this->belongsTo(Usuario::class, 'CodUsu', 'CodUsu');
+    }
+
 }
