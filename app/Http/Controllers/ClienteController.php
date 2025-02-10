@@ -33,7 +33,8 @@ class ClienteController extends Controller
 
             $clientesQuery = DB::table('preguntas')
                 ->join('clientes', 'preguntas.CodClie', '=', 'clientes.CodClie')
-                ->select('clientes.*');
+                ->join('usuario', 'preguntas.CodUsu', '=', 'usuario.CodUsu')
+                ->select('clientes.*', DB::raw('CONCAT(usuario.NomUsu, " ", usuario.AppUsu, " ", usuario.ApmUsu) as Encuestador'));
 
             if (!$isAdmin) {
                 $clientesQuery->where('preguntas.CodUsu', $id);
@@ -44,6 +45,11 @@ class ClienteController extends Controller
             }
 
             $clientes = $clientesQuery->paginate(10);
+
+            $clientes->getCollection()->transform(function ($cliente) {
+                $cliente->NomComp = $cliente->NomClie . ' ' . $cliente->AppClie . ' ' . $cliente->ApmClie;
+                return $cliente;
+            });
 
             return response()->json($clientes);
 
