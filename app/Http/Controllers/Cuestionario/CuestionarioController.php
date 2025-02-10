@@ -41,6 +41,8 @@ class CuestionarioController extends Controller
     {
         try {
             $validated = $request->validated();
+            $validated['FecPre'] = now()->toDateString();
+            $validated['HorPre'] = now()->toTimeString();
             $cuestionario = Cuestionario::create($validated);
 
             $client = Cliente::find($validated['CodClie']);
@@ -57,7 +59,7 @@ class CuestionarioController extends Controller
 
             return response()->json(['message' => 'Registro creado'], 201);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 
