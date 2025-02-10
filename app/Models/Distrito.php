@@ -20,4 +20,9 @@ class Distrito extends Model
 
     public $timestamps = false;
 
+    public function provincia()
+    {
+        return $this->belongsTo(Provincia::class, 'idProvincia', 'idProvincia');
+    }
+
 }
