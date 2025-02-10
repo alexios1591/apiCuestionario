@@ -18,7 +18,7 @@ class ClienteFactory extends Factory
     public function definition(): array
     {
         return [
-            'NomClie' => $this->faker->firstName,
+            'NomClie' => $this->faker->firstName('female'),
             'AppClie' => $this->faker->lastName,
             'ApmClie' => $this->faker->lastName,
             'EmaClie' => $this->faker->unique()->safeEmail,
