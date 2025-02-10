@@ -25,7 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('cliente', ClienteController::class);
+Route::post('cliente', [ClienteController::class, 'store']);
+Route::put('cliente', [ClienteController::class, 'update']);
 
 Route::post('login', [LoginController::class, 'login']);
 Route::get('getAll', [LoginController::class, 'index']);
@@ -38,8 +39,8 @@ Route::get('clientes/export-pdf', [ClienteController::class, 'exportPdf']);
 Route::get('clientes/export-excel', [ClienteController::class, 'exportExcel']);
 Route::get('clientes/report-questionnaire/{id}', [ClienteController::class, 'reportQuestionnaire']);
 Route::get('clientes/unsurveyed', [ClienteController::class, 'getUnsurveyed']);
-Route::get('clientes/{dni}', [ClienteController::class, 'searchByDni']);
 Route::get('clientes/getall/{id}', [ClienteController::class, 'getAll']);
+// Route::get('clientes/{dni}', [ClienteController::class, 'searchByDni']);
 Route::get('customers', [ClienteController::class, 'getClientes']);
 
 Route::post('cuestionario', [CuestionarioController::class, 'insert']);
