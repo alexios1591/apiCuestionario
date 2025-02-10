@@ -36,6 +36,7 @@ Route::get('provincia/{id}', [LocalidadController::class, 'provincia']);
 Route::get('distrito/{id}', [LocalidadController::class, 'distrito']);
 Route::get('clientes/export-pdf', [ClienteController::class, 'exportPdf']);
 Route::get('clientes/export-excel', [ClienteController::class, 'exportExcel']);
+Route::get('clientes/report-questionnaire/{id}', [ClienteController::class, 'reportQuestionnaire']);
 Route::get('clientes/unsurveyed', [ClienteController::class, 'getUnsurveyed']);
 Route::get('clientes/{dni}', [ClienteController::class, 'searchByDni']);
 Route::get('clientes/getall/{id}', [ClienteController::class, 'getAll']);

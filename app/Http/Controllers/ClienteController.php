@@ -54,7 +54,7 @@ class ClienteController extends Controller
             $dni = $request->query('dni');
 
             $clientesQuery = Cliente::whereDoesntHave('preguntas')
-            ->orderBy('RegClie', 'desc');
+                ->orderBy('RegClie', 'desc');
 
             if ($dni) {
                 $clientesQuery->where('clientes.DniClie', 'like', "%$dni%");
@@ -181,6 +181,38 @@ class ClienteController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al generar el Excel',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function reportQuestionnaire($id)
+    {
+        try {
+            $cliente = Cliente::find($id);
+
+            if (!$cliente) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cliente no encontrado.'
+                ], 404);
+            }
+
+            $preguntas = $cliente->preguntas;
+
+            if ($preguntas->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El cliente no ha sido encuestado.'
+                ], 404);
+            }
+
+            $pdf = PDF::loadView('reports.questionnaire-report', ['encuestado' => $cliente, 'cuestionario' => $preguntas->first()]);
+            return $pdf->download('Reporte de cuestionario - ' . $cliente->NomClie . ' ' . $cliente->AppClie . ' ' . $cliente->ApmClie . ' - ' . now()->format('d-m-Y H:i:s') . '.pdf');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrió un error al generar el PDF',
                 'error' => $e->getMessage()
             ], 500);
         }
