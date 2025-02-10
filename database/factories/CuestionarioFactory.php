@@ -81,7 +81,9 @@ class CuestionarioFactory extends Factory
                     $attributes['Pre10'],
                     $attributes['Pre11']
                 ]);
-            }
+            },
+            'FecPre' => $this->faker->dateTimeBetween('first day of January last year', 'now'),
+            'HorPre' => $this->faker->time('H:i', '17:00:00'),
         ];
     }
 }
