@@ -20,4 +20,8 @@ class Provincia extends Model
     public $timestamps = false;
     protected $primaryKey = 'idProvincia';
 
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class, 'idDepartamneto', 'idDepartamneto');
+    }
 }
