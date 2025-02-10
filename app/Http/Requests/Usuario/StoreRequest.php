@@ -25,13 +25,24 @@ class StoreRequest extends FormRequest
             'NomUsu' => ['required'],
             'AppUsu' => ['required'],
             'ApmUsu' => ['required'],
-            'DocUsu' => ['required', 'unique:usuario,DocUsu'],
-            'EmaUsu' => ['required', 'unique:usuario,EmaUsu'],
-            'CelUsu' => ['required', 'unique:usuario,CelUsu'],
+            'DocUsu' => ['required', 'unique:usuario,DocUsu,' . $this->CodUsu . ',CodUsu'],
+            'EmaUsu' => ['required', 'unique:usuario,EmaUsu,' . $this->CodUsu . ',CodUsu'],
+            'CelUsu' => ['required', 'unique:usuario,CelUsu,' . $this->CodUsu . ',CodUsu'],
             'sexUsu' => ['required'],
             'FnaUsu' => ['required']
         ];
     }
+
+
+    public function messages()
+    {
+        return [
+            'DocUsu.unique' => 'El DNI ya ha sido registrado.',
+            'EmaUsu.unique' => 'El correo electrónico ya está registrado.',
+            'CelUsu.unique' => 'El número ya está registrado.',
+        ];
+    }
+
 }
 
 
