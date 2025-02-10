@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Distrito;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,7 +25,7 @@ class ClienteFactory extends Factory
             'DniClie' => $this->faker->unique()->numerify('########'),
             'FnaClie' => $this->faker->date('Y-m-d', '2003-12-31'),
             'CelClie' => $this->faker->phoneNumber,
-            'localidad' => $this->faker->state,
+            'localidad' => Distrito::inRandomOrder()->first()->distrito,
             'RegClie' => $this->faker->dateTimeBetween('first day of January this year', 'now')
         ];
     }
