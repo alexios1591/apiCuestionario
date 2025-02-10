@@ -29,6 +29,8 @@ class Cuestionario extends Model
         'Pre13',
         'ObsPre',
         'PunPre',
+        'FecPre',
+        'HorPre'
     ];
     public $timestamps = false;
     protected $primaryKey = 'CodPre';
@@ -38,21 +40,18 @@ class Cuestionario extends Model
         parent::boot();
 
         static::saving(function ($model) {
-            $model->PunPre = 
-                $model->Pre1 + 
-                $model->Pre2 + 
-                $model->Pre3 + 
-                $model->Pre4 + 
-                $model->Pre5 + 
-                $model->Pre6 + 
-                $model->Pre7 + 
-                $model->Pre8 + 
-                $model->Pre9 + 
-                $model->Pre10 + 
+            $model->PunPre =
+                $model->Pre1 +
+                $model->Pre2 +
+                $model->Pre3 +
+                $model->Pre4 +
+                $model->Pre5 +
+                $model->Pre6 +
+                $model->Pre7 +
+                $model->Pre8 +
+                $model->Pre9 +
+                $model->Pre10 +
                 $model->Pre11;
-
-            $model->FecPre = now()->toDateString();
-            $model->HorPre = now()->toTimeString();
         });
     }
 
