@@ -26,6 +26,12 @@ class Cliente extends Model
     public $timestamps = false;
     protected $primaryKey = 'CodClie';
 
+    protected $appends = ['NomComp'];
+    public function getNomCompAttribute()
+    {
+        return $this->NomClie . ' ' . $this->AppClie . ' ' . $this->ApmClie;
+    }
+
     public function preguntas()
     {
         return $this->hasMany(Cuestionario::class, 'CodClie', 'CodClie');
