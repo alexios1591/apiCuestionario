@@ -48,7 +48,41 @@ class ClienteController extends Controller
 
             $clientes->getCollection()->transform(function ($cliente) {
                 $cliente->NomComp = $cliente->NomClie . ' ' . $cliente->AppClie . ' ' . $cliente->ApmClie;
-                return $cliente;
+
+
+                $localidad = Str::title(strtolower($cliente->localidad));
+
+                $distrito = DB::table('distrito')
+                    ->where('distrito', 'like', "%$localidad%")
+                    ->first();
+
+                if (!$distrito) {
+                    dd($localidad);
+                }
+
+                $distrito = Distrito::find($distrito->idDistrito);
+
+                $provincia = $distrito->provincia;
+                $departamento = Departamento::find($provincia->idDepartamento);
+
+                return [
+                    'CodClie' => $cliente->CodClie,
+                    'NomClie' => $cliente->NomClie,
+                    'AppClie' => $cliente->AppClie,
+                    'ApmClie' => $cliente->ApmClie,
+                    'EmaClie' => $cliente->EmaClie,
+                    'DniClie' => $cliente->DniClie,
+                    'FnaClie' => $cliente->FnaClie,
+                    'CelClie' => $cliente->CelClie,
+                    'localidad' => $cliente->localidad,
+                    'RegClie' => $cliente->RegClie,
+                    'encuestado' => false,
+                    'idDistrito' => $distrito->idDistrito,
+                    'idProvincia' => $provincia->idProvincia,
+                    'idDepartamento' => $departamento->idDepartamento,
+                    'NomComp' => $cliente->NomComp,
+                    'Encuestador' => $cliente->Encuestador
+                ];
             });
 
             return response()->json($clientes);
