@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Cliente\StoreRequest;
 use App\Models\Cliente;
+use App\Models\Departamento;
+use App\Models\Distrito;
 use App\Models\UsuarioRoles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\ClientExcelExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Str;
 
 class ClienteController extends Controller
 {
@@ -62,10 +65,46 @@ class ClienteController extends Controller
 
             $clientes = $clientesQuery->paginate(10);
 
+
+            $clientes->getCollection()->transform(function ($cliente) {
+
+                $localidad = Str::title(strtolower($cliente->localidad));
+
+                $distrito = DB::table('distrito')
+                    ->where('distrito', 'like', "%$localidad%")
+                    ->first();
+
+                if (!$distrito) {
+                    dd($localidad);
+                }
+
+                $distrito = Distrito::find($distrito->idDistrito);
+
+                $provincia = $distrito->provincia;
+                $departamento = Departamento::find($provincia->idDepartamento);
+
+                return [
+                    'CodClie' => $cliente->CodClie,
+                    'NomClie' => $cliente->NomClie,
+                    'AppClie' => $cliente->AppClie,
+                    'ApmClie' => $cliente->ApmClie,
+                    'EmaClie' => $cliente->EmaClie,
+                    'DniClie' => $cliente->DniClie,
+                    'FnaClie' => $cliente->FnaClie,
+                    'CelClie' => $cliente->CelClie,
+                    'localidad' => $cliente->localidad,
+                    'RegClie' => $cliente->RegClie,
+                    'encuestado' => false,
+                    'idDistrito' => $distrito->idDistrito,
+                    'idProvincia' => $provincia->idProvincia,
+                    'idDepartamento' => $departamento->idDepartamento
+                ];
+            });
+
             return response()->json($clientes);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Ocurrió un error', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Ocurrió un error', 'error' => $e->getMessage(), 'line' => $e->getLine()], 500);
         }
     }
 
@@ -230,9 +269,33 @@ class ClienteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreRequest $request)
     {
-        //
+        try {
+            
+            $cliente = Cliente::find($request->input('CodClie'));
+
+            if (!$cliente) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cliente no encontrado.'
+                ], 404);
+            }
+
+            $cliente->update($request->all());
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Cliente actualizado correctamente.',
+                'cliente' => $cliente
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ocurrió un error al actualizar el cliente.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
