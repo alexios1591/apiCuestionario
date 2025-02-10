@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Cliente\StoreRequest;
+use App\Mail\SurveyRegistrationNotification;
 use App\Models\Cliente;
 use App\Models\Departamento;
 use App\Models\Distrito;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\ClientExcelExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Mail;
 use Str;
 
 class ClienteController extends Controller
@@ -128,6 +130,11 @@ class ClienteController extends Controller
         try {
             $validated = $request->validated();
             $validated['RegClie'] = now();
+
+            Mail::to($validated['EmaClie'])
+                ->send(new SurveyRegistrationNotification([
+                    'name' => $validated['NomClie']
+                ]));
 
             $cliente = Cliente::create($validated);
 
@@ -272,7 +279,7 @@ class ClienteController extends Controller
     public function update(StoreRequest $request)
     {
         try {
-            
+
             $cliente = Cliente::find($request->input('CodClie'));
 
             if (!$cliente) {
