@@ -32,4 +32,25 @@ class Cuestionario extends Model
     ];
     public $timestamps = false;
     protected $primaryKey = 'CodPre';
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            $model->PunPre = 
+                $model->Pre1 + 
+                $model->Pre2 + 
+                $model->Pre3 + 
+                $model->Pre4 + 
+                $model->Pre5 + 
+                $model->Pre6 + 
+                $model->Pre7 + 
+                $model->Pre8 + 
+                $model->Pre9 + 
+                $model->Pre10 + 
+                $model->Pre11;
+        });
+    }
+
 }
