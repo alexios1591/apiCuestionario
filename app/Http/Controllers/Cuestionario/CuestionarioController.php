@@ -4,16 +4,19 @@ namespace App\Http\Controllers\Cuestionario;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cuestionario\StoreRequest;
+use App\Mail\SurveyCompletedMail;
+use App\Models\Cliente;
 use App\Models\Cuestionario;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Mail;
 
 class CuestionarioController extends Controller
 {
     public function validateCode(Request $request)
     {
         $request->validate([
-            'dni' => 'required|string|max:20', 
+            'dni' => 'required|string|max:20',
         ]);
 
         $dni = $request->input('dni');
@@ -34,23 +37,38 @@ class CuestionarioController extends Controller
         }
     }
 
-    public function insert(StoreRequest $request){
-        try{
+    public function insert(StoreRequest $request)
+    {
+        try {
             $validated = $request->validated();
-            Cuestionario::create($validated);
+            $cuestionario = Cuestionario::create($validated);
+
+            $client = Cliente::find($validated['CodClie']);
+
+            $reportLink = url('/api/clientes/report-questionnaire/' . $client->CodClie);
+
+            $details = [
+                'name' => $client->NomClie,
+                'score' => $cuestionario->PunPre,
+                'report_link' => $reportLink
+            ];
+
+            Mail::to($client->EmaClie)->send(new SurveyCompletedMail($details));
+
             return response()->json(['message' => 'Registro creado'], 201);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()]);
         }
     }
 
-    public function getById($id){
-        try{
-            $cuestionario = Cuestionario::where('CodClie', $id) 
-            ->orderBy('CodPre', 'desc')
-            ->first();
+    public function getById($id)
+    {
+        try {
+            $cuestionario = Cuestionario::where('CodClie', $id)
+                ->orderBy('CodPre', 'desc')
+                ->first();
             return response()->json(['cuestionario' => $cuestionario]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()]);
         }
     }
