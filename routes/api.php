@@ -32,6 +32,7 @@ Route::get('dashboard/surveys-by-user', [DashboardController::class, 'getSurveys
 
 Route::post('cliente', [ClienteController::class, 'store']);
 Route::put('cliente', [ClienteController::class, 'update']);
+Route::delete('cliente/{id}', [ClienteController::class, 'destroy']);
 
 Route::post('login', [LoginController::class, 'login']);
 Route::get('getAll', [LoginController::class, 'index']);
