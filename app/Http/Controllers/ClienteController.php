@@ -116,10 +116,6 @@ class ClienteController extends Controller
                     ->where('distrito', 'like', "%$localidad%")
                     ->first();
 
-                if (!$distrito) {
-                    dd($localidad);
-                }
-
                 $distrito = Distrito::find($distrito->idDistrito);
 
                 $provincia = $distrito->provincia;
@@ -134,6 +130,7 @@ class ClienteController extends Controller
                     'DniClie' => $cliente->DniClie,
                     'FnaClie' => $cliente->FnaClie,
                     'CelClie' => $cliente->CelClie,
+                    'NomComp' => $cliente->NomComp,
                     'localidad' => $cliente->localidad,
                     'RegClie' => $cliente->RegClie,
                     'encuestado' => false,
